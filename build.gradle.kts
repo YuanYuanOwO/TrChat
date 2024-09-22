@@ -1,11 +1,9 @@
-import io.izzel.taboolib.gradle.BUKKIT
-import io.izzel.taboolib.gradle.BUNGEE
-import io.izzel.taboolib.gradle.VELOCITY
+import io.izzel.taboolib.gradle.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    id("io.izzel.taboolib") version "2.0.13"
+    id("io.izzel.taboolib") version "2.0.18"
     id("org.jetbrains.kotlin.jvm") version "1.8.22"
 }
 
@@ -18,13 +16,10 @@ subprojects {
         env {
             install("basic-configuration")
             install(
-                "bukkit-hook",
-                "bukkit-util",
-                "bukkit-ui",
-                "bukkit-ui-12100",
-                "bukkit-ui-legacy",
-                "bukkit-xseries",
-                "bukkit-xseries-item"
+                BukkitHook,
+                BukkitNMSUtil,
+                BukkitNMSItemTag,
+                BukkitUI
             )
             install(
                 "database",
@@ -38,19 +33,11 @@ subprojects {
                 "minecraft-kether",
                 "minecraft-metrics"
             )
-            install(
-                "bukkit-nms",
-                "bukkit-nms-stable",
-                "bukkit-nms-tag",
-                "bukkit-nms-tag-12005",
-                "bukkit-nms-tag-legacy",
-            )
-            install("script-javascript")
-            install(BUKKIT, BUNGEE, VELOCITY)
-            install("platform-bukkit-impl")
+            install(JavaScript)
+            install(Bukkit, BungeeCord, Velocity)
         }
         version {
-            taboolib = "6.2.0-beta5"
+            taboolib = "6.2.0-beta11"
             coroutines = null
 //            isSkipKotlin = true
 //            isSkipKotlinRelocate = true

@@ -18,8 +18,6 @@ import taboolib.common.platform.function.console
 import taboolib.common.platform.function.pluginVersion
 import taboolib.module.lang.sendLang
 import taboolib.module.nms.MinecraftVersion.majorLegacy
-import taboolib.module.nms.disablePacketListener
-import taboolib.platform.Folia
 
 @PlatformSide(Platform.BUKKIT)
 object TrChatBukkit : Plugin() {
@@ -53,11 +51,11 @@ object TrChatBukkit : Plugin() {
     }
 
     override fun onEnable() {
-        if (!Settings.usePackets
-            || Folia.isFolia
-            || Bukkit.getPluginManager().isPluginEnabled("Geyser-Spigot")
-            || majorLegacy >= 12005
-            ) disablePacketListener()
+//        if (!Settings.usePackets
+//            || Folia.isFolia
+//            || Bukkit.getPluginManager().isPluginEnabled("Geyser-Spigot")
+//            || majorLegacy >= 12005
+//            ) disablePacketListener()
         NMS.instance
         BukkitProxyManager.processor
         HookPlugin.printInfo()

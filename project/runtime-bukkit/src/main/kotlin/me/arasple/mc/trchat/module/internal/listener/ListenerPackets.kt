@@ -37,6 +37,7 @@ object ListenerPackets {
 
     @SubscribeEvent
     fun secure(e: PacketReceiveEvent) {
+        if (majorLegacy >= 12005) return
         if (e.packet.name == "ServerboundChatSessionUpdatePacket") {
             e.isCancelled = true
         }
@@ -47,6 +48,7 @@ object ListenerPackets {
      */
     @SubscribeEvent
     fun record(e: PacketSendEvent) {
+        if (majorLegacy >= 12005) return
         val session = ChatSession.sessions[e.player.uniqueId] ?: return
         when (e.packet.name) {
             "ClientboundSystemChatPacket" -> {

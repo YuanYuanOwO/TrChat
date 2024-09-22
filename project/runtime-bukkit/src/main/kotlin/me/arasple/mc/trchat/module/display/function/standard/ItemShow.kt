@@ -216,7 +216,7 @@ object ItemShow : Function("ITEM") {
                     Components.text(itemMeta!!.displayName)
                 }
             }
-        } else if (Folia.isFolia || MinecraftVersion.majorLegacy >= 12005) {
+        } else if (Folia.isFolia) {
             toTranslatableComponentAdventure()
         } else {
             try {

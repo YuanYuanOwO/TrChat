@@ -1,20 +1,24 @@
 package me.arasple.mc.trchat.api.nms
 
+import net.minecraft.network.chat.IChatBaseComponent
+import org.bukkit.craftbukkit.v1_20_R3.util.CraftChatMessage
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.module.chat.ComponentText
 import taboolib.module.nms.MinecraftLanguage
+import taboolib.module.nms.getLanguageKey
+import taboolib.platform.util.hoverItem
 import java.util.*
 
 class NMSImpl12100 : NMS() {
 
     override fun craftChatMessageFromComponent(component: ComponentText): Any {
-        TODO("Not yet implemented")
+        return CraftChatMessage.fromJSON(component.toRawMessage())
     }
 
     override fun rawMessageFromCraftChatMessage(component: Any): String {
-        TODO("Not yet implemented")
+        return CraftChatMessage.toJSON(component as IChatBaseComponent)
     }
 
     override fun sendMessage(receiver: Player, component: ComponentText, sender: UUID?, usePacket: Boolean) {
@@ -22,14 +26,14 @@ class NMSImpl12100 : NMS() {
     }
 
     override fun hoverItem(component: ComponentText, itemStack: ItemStack): ComponentText {
-        TODO("Not yet implemented")
+        return component.hoverItem(itemStack)
     }
 
     override fun optimizeNBT(itemStack: ItemStack, nbtWhitelist: Array<String>): ItemStack {
-        TODO("Not yet implemented")
+        return itemStack
     }
 
     override fun getLocaleKey(itemStack: ItemStack): MinecraftLanguage.LanguageKey {
-        TODO("Not yet implemented")
+        return itemStack.getLanguageKey()
     }
 }

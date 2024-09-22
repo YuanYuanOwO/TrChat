@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.BlockStateMeta
 import org.bukkit.inventory.meta.ItemMeta
 import taboolib.module.chat.ComponentText
 import taboolib.module.chat.component
-import taboolib.module.nms.MinecraftVersion
 import taboolib.module.nms.getI18nName
 import taboolib.platform.Folia
 import taboolib.platform.util.*
@@ -21,7 +20,7 @@ fun String.parseSimple() = component().build {
 }
 
 fun ComponentText.hoverItemFixed(item: ItemStack): ComponentText {
-    if (Folia.isFolia || MinecraftVersion.majorLegacy >= 12005) {
+    if (Folia.isFolia) {
         return hoverItemAdventure(item)
     }
     var newItem = item.optimizeShulkerBox()
