@@ -32,7 +32,8 @@ class Text(val content: String, val condition: Condition?) {
             text = HookPlugin.getItemsAdder().replaceFontImages(text, null)
         }
         return if (isDragonCoreHooked) {
-            DefaultComponent(listOf(TextComponent(text.replaceWithOrder(*vars).colorify())))
+            // 使有效部分在latest
+            Components.empty().append(DefaultComponent(listOf(TextComponent(text.replaceWithOrder(*vars).colorify()))))
         } else {
             Components.text(text.replaceWithOrder(*vars).colorify())
         }

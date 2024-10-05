@@ -7,6 +7,7 @@ import taboolib.common.platform.Plugin
 import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.command
 import taboolib.common.platform.command.suggest
+import taboolib.common.platform.function.console
 import taboolib.common.platform.function.pluginVersion
 import taboolib.common.util.unsafeLazy
 import taboolib.module.lang.sendLang
@@ -26,8 +27,8 @@ object TrChatVelocity : Plugin() {
 
     override fun onLoad() {
         plugin.server.channelRegistrar.register(VelocityProxyManager.incoming, VelocityProxyManager.outgoing)
-        VelocityConsole().sendLang("Plugin-Loading", plugin.server.version.version)
-        VelocityConsole().sendLang("Plugin-Proxy-Supported", "Velocity")
+        console().sendLang("Plugin-Loading", plugin.server.version.version)
+        console().sendLang("Plugin-Proxy-Supported", "Velocity")
     }
 
     override fun onEnable() {
@@ -42,7 +43,7 @@ object TrChatVelocity : Plugin() {
                 }
             }
         }
-        VelocityConsole().sendLang("Plugin-Enabled", pluginVersion)
+        console().sendLang("Plugin-Enabled", pluginVersion)
     }
 
 }

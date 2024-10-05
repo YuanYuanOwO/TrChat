@@ -1,6 +1,6 @@
 package me.arasple.mc.trchat.module.display
 
-import me.arasple.mc.trchat.module.adventure.getComponent
+import me.arasple.mc.trchat.api.nms.NMS
 import me.arasple.mc.trchat.module.conf.file.Settings
 import me.arasple.mc.trchat.module.display.channel.Channel
 import me.arasple.mc.trchat.module.display.channel.PrivateChannel
@@ -9,6 +9,9 @@ import me.arasple.mc.trchat.util.color.MessageColors
 import me.arasple.mc.trchat.util.data
 import org.bukkit.entity.Player
 import taboolib.expansion.getDataContainer
+import taboolib.library.reflex.Reflex.Companion.getProperty
+import taboolib.module.chat.ComponentText
+import taboolib.module.chat.Components
 import taboolib.module.nms.Packet
 import taboolib.module.nms.sendPacket
 import java.util.*
@@ -107,6 +110,20 @@ class ChatSession(val player: Player) {
         fun removeSession(player: Player) {
             Channel.quit(player, hint = false)
             sessions -= player.uniqueId
+        }
+
+        private fun Packet.getComponent(): ComponentText? {
+            return when (name) {
+                "ClientboundSystemChatPacket" -> {
+                    val iChat = source.getProperty<Any>("content", findToParent = false) ?: return null
+                    Components.parseRaw(NMS.instance.rawMessageFromCraftChatMessage(iChat))
+                }
+                "PacketPlayOutChat" -> {
+                    val iChat = read<Any>("a") ?: return null
+                    Components.parseRaw(NMS.instance.rawMessageFromCraftChatMessage(iChat))
+                }
+                else -> error("Unsupported packet $name")
+            }
         }
 
         data class ChatMessage(val packet: Any, val message: String?)

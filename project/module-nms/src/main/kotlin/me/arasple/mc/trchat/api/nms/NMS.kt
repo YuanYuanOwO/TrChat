@@ -34,9 +34,10 @@ abstract class NMS {
         @JvmStatic
         val instance by unsafeLazy {
             if (MinecraftVersion.majorLegacy < 12005) nmsProxy<NMS>()
-            else nmsProxy<NMS>("me.arasple.mc.trchat.api.nms.NMSImpl12100")
+            else nmsProxy<NMS>("me.arasple.mc.trchat.api.nms.NMSImpl12005")
         }
 
+        // 1.20.4-
         val whitelistTags = arrayOf(
             // 附魔
             "ench",

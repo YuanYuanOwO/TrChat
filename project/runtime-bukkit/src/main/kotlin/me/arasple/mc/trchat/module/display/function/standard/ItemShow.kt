@@ -5,8 +5,6 @@ import com.google.common.cache.CacheBuilder
 import me.arasple.mc.trchat.api.event.TrChatItemShowEvent
 import me.arasple.mc.trchat.api.impl.BukkitProxyManager
 import me.arasple.mc.trchat.api.nms.NMS
-import me.arasple.mc.trchat.module.adventure.toNative
-import me.arasple.mc.trchat.module.adventure.toTranslatableComponentAdventure
 import me.arasple.mc.trchat.module.conf.file.Functions
 import me.arasple.mc.trchat.module.display.function.Function
 import me.arasple.mc.trchat.module.display.function.StandardFunction
@@ -14,16 +12,17 @@ import me.arasple.mc.trchat.module.internal.hook.HookPlugin
 import me.arasple.mc.trchat.module.internal.hook.type.HookDisplayItem
 import me.arasple.mc.trchat.module.internal.script.Reaction
 import me.arasple.mc.trchat.util.*
+import net.kyori.adventure.translation.Translatable
 import org.bukkit.Material
 import org.bukkit.block.ShulkerBox
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BlockStateMeta
-import taboolib.common.UnsupportedVersionException
 import taboolib.common.io.digest
 import taboolib.common.platform.Platform
 import taboolib.common.platform.PlatformSide
+import taboolib.common.platform.function.info
 import taboolib.common.util.asList
 import taboolib.common.util.replaceWithOrder
 import taboolib.common.util.resettableLazy
@@ -37,7 +36,6 @@ import taboolib.module.configuration.ConfigNode
 import taboolib.module.configuration.ConfigNodeTransfer
 import taboolib.module.nms.MinecraftVersion
 import taboolib.module.nms.getI18nName
-import taboolib.module.nms.getKey
 import taboolib.module.nms.getLanguageKey
 import taboolib.module.ui.buildMenu
 import taboolib.module.ui.type.Chest
@@ -140,6 +138,7 @@ object ItemShow : Function("ITEM") {
                         Components.text(part.text.translate(proxySender).replaceWithOrder(newItem.amount, sha1))
                     }
                     component.applyStyle(type, part, i, proxySender, newItem.amount, sha1).hoverItemFixed(newItem)
+                        .also { info("$i: ${it.toRawMessage()}") }
                 }
             } else {
                 sender.getComponentFromLang("Function-Item-Show-Format-New", newItem.amount) { type, i, part, proxySender ->
@@ -206,37 +205,42 @@ object ItemShow : Function("ITEM") {
 
     @Suppress("Deprecation")
     private fun ItemStack.getNameComponent(player: Player): ComponentText {
-        return if (!originName && itemMeta?.hasDisplayName() == true) {
+        if (!originName && itemMeta?.hasDisplayName() == true) {
+//            try {
+//                return itemMeta!!.displayName()!!.toNative()
+//            } catch (_: Throwable) {
+//            }
             try {
-                Components.empty().append(itemMeta!!.displayName()!!.toNative())
+                // 使有效部分在latest
+                return Components.empty().append(DefaultComponent(itemMeta!!.displayNameComponent.toList()))
             } catch (_: Throwable) {
-                try {
-                    Components.empty().append(DefaultComponent(itemMeta!!.displayNameComponent.toList()))
-                } catch (_: Throwable) {
-                    Components.text(itemMeta!!.displayName)
-                }
             }
-        } else if (Folia.isFolia) {
-            toTranslatableComponentAdventure()
+            return Components.text(itemMeta!!.displayName)
         } else {
-            try {
-                if (MinecraftVersion.isHigherOrEqual(MinecraftVersion.V1_15)) {
-                    Components.translation(getLanguageKey().path)
-                } else {
-                    Components.text(getI18nName(player))
-                }
-            } catch (_: UnsupportedVersionException) {
-                try {
-                    // 玄学问题 https://github.com/TrPlugins/TrChat/issues/344
-                    Components.translation(NMS.instance.getLocaleKey(this).path)
+            if (MinecraftVersion.isHigherOrEqual(MinecraftVersion.V1_15)) {
+                val key = try {
+                    if (Folia.isFolia) {
+                        (this as Translatable).translationKey()
+                    } else {
+                        getLanguageKey().path
+                    }
                 } catch (_: Throwable) {
                     try {
-                        Components.text(getKey())
+                        // 玄学问题 https://github.com/TrPlugins/TrChat/issues/344
+                        NMS.instance.getLocaleKey(this).path
                     } catch (_: Throwable) {
-                        Components.text(type.name)
+                        null
                     }
                 }
+                if (key != null) {
+                    return Components.translation(key)
+                }
             }
+            try {
+                return Components.text(getI18nName(player))
+            } catch (_: Throwable) {
+            }
+            return Components.text(type.name)
         }
     }
 
