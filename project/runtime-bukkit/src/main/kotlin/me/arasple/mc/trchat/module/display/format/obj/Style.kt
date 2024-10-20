@@ -2,14 +2,13 @@ package me.arasple.mc.trchat.module.display.format.obj
 
 import me.arasple.mc.trchat.module.conf.file.Settings
 import me.arasple.mc.trchat.module.internal.script.Condition
+import me.arasple.mc.trchat.util.*
 import me.arasple.mc.trchat.util.color.colorify
-import me.arasple.mc.trchat.util.parseInline
-import me.arasple.mc.trchat.util.parseSimple
-import me.arasple.mc.trchat.util.pass
-import me.arasple.mc.trchat.util.setPlaceholders
+import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.command.CommandSender
 import taboolib.common.util.replaceWithOrder
 import taboolib.module.chat.ComponentText
+import taboolib.module.chat.impl.DefaultComponent
 
 sealed interface Style {
 
@@ -36,7 +35,11 @@ sealed interface Style {
                 if (Settings.simpleHover) {
                     component.hoverText(content.parseSimple())
                 } else {
-                    component.hoverText(content.colorify())
+                    if (isDragonCoreHooked) {
+                        component.hoverText(DefaultComponent(listOf(TextComponent(content.colorify()))))
+                    } else {
+                        component.hoverText(content.colorify())
+                    }
                 }
             }
         }

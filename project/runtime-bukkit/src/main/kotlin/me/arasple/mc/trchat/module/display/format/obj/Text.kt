@@ -31,11 +31,12 @@ class Text(val content: String, val condition: Condition?) {
             }
             text = HookPlugin.getItemsAdder().replaceFontImages(text, null)
         }
+        text = text.replaceWithOrder(*vars).colorify()
         return if (isDragonCoreHooked) {
             // 使有效部分在latest
-            Components.empty().append(DefaultComponent(listOf(TextComponent(text.replaceWithOrder(*vars).colorify()))))
+            Components.empty().append(DefaultComponent(listOf(TextComponent(text))))
         } else {
-            Components.text(text.replaceWithOrder(*vars).colorify())
+            Components.text(text)
         }
     }
 }

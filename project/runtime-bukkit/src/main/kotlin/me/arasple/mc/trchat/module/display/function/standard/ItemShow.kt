@@ -13,6 +13,7 @@ import me.arasple.mc.trchat.module.internal.hook.type.HookDisplayItem
 import me.arasple.mc.trchat.module.internal.script.Reaction
 import me.arasple.mc.trchat.util.*
 import net.kyori.adventure.translation.Translatable
+import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Material
 import org.bukkit.block.ShulkerBox
 import org.bukkit.entity.Player
@@ -210,6 +211,9 @@ object ItemShow : Function("ITEM") {
 //                return itemMeta!!.displayName()!!.toNative()
 //            } catch (_: Throwable) {
 //            }
+            if (isDragonCoreHooked) {
+                return Components.empty().append(DefaultComponent(listOf(TextComponent(itemMeta!!.displayName))))
+            }
             try {
                 // 使有效部分在latest
                 return Components.empty().append(DefaultComponent(itemMeta!!.displayNameComponent.toList()))
