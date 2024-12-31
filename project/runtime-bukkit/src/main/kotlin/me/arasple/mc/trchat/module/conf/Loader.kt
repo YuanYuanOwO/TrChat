@@ -31,7 +31,6 @@ import taboolib.common.util.asList
 import taboolib.common.util.orNull
 import taboolib.common.util.unsafeLazy
 import taboolib.common5.Coerce
-import taboolib.common5.FileWatcher
 import taboolib.library.configuration.ConfigurationSection
 import taboolib.module.configuration.util.getMap
 import taboolib.module.lang.sendLang
@@ -72,11 +71,12 @@ object Loader {
         Channel.channels.clear()
 
         filterChannelFiles(folder).forEach {
-            if (FileWatcher.INSTANCE.hasListener(it)) {
-                loadChannel(it)
-            } else {
-                FileWatcher.INSTANCE.addSimpleListener(it, { loadChannel(it) }, true)
-            }
+//            if (FileWatcher.INSTANCE.hasListener(it)) {
+//                loadChannel(it)
+//            } else {
+//                FileWatcher.INSTANCE.addSimpleListener(it, { loadChannel(it) }, true)
+//            }
+            loadChannel(it)
         }
 
         TrChatReloadEvent.Channel(Channel.channels).call()

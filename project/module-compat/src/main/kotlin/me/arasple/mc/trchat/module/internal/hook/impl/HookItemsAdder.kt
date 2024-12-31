@@ -3,6 +3,7 @@ package me.arasple.mc.trchat.module.internal.hook.impl
 import dev.lone.itemsadder.api.FontImages.FontImageWrapper
 import me.arasple.mc.trchat.module.internal.hook.HookAbstract
 import org.bukkit.entity.Player
+import taboolib.module.nms.MinecraftVersion.majorLegacy
 
 /**
  * @author ItsFlicker
@@ -14,14 +15,14 @@ class HookItemsAdder : HookAbstract() {
         if (!isHooked) {
             return message
         }
-        try {
-            return if (player == null) {
+        return try {
+            if (player == null || majorLegacy >= 12005) {
                 FontImageWrapper.replaceFontImages(message)
             } else {
                 FontImageWrapper.replaceFontImages(player, message)
             }
         } catch (_: Throwable) {
-            return message
+            message
         }
     }
 }
